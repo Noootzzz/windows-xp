@@ -17,12 +17,7 @@ export default function Screen() {
   const setMode = useExperienceStore((s) => s.setMode);
   const mode = useExperienceStore((s) => s.mode);
   const screen = useScreenStore((s) => s.screen);
-  const materialRef = useRef<THREE.MeshBasicMaterial | null>(null);
-  const videoTexture = useVideoTexture("/videos/demo.mp4", {
-    muted: true,
-    loop: true,
-    start: true,
-  });
+  const materialRef = useRef<THREE.MeshBasicMaterial | null>(null);Â
   const monitor003Ref = useRef<THREE.Object3D | null>(null);
   const monitor003 = useMemo(() => {
     const original = scene.getObjectByName("Monitor003");
@@ -60,24 +55,6 @@ export default function Screen() {
     }
   };
 
-  useEffect(() => {
-    if (monitor003 && !materialRef.current) {
-      videoTexture.flipY = false;
-      videoTexture.rotation = Math.PI / 2;
-      videoTexture.center.set(0.5, 0.5);
-      videoTexture.repeat.set(1, 1);
-
-      monitor003.traverse((child: any) => {
-        if (child.isMesh && !materialRef.current) {
-          materialRef.current = new THREE.MeshBasicMaterial({
-            map: videoTexture,
-            color: 0xffffff,
-          });
-          child.material = materialRef.current;
-        }
-      });
-    }
-  }, [monitor003, videoTexture]);
 
   useEffect(() => {
     if (materialRef.current) {
@@ -110,7 +87,7 @@ export default function Screen() {
         >
           <Html
             transform
-            position={[0,0.2,0.4]}
+            position={[0,0.2,0]}
             className="htmlScreen"
             occlude="blending"
             style={{ width: "1200px", height: "1050px", overflow: "hidden" }}
