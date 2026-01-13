@@ -6,15 +6,26 @@ export interface Track {
 }
 
 export const useAudioPlayer = () => {
-  const [playlist, setPlaylist] = useState<Track[]>([
-    { name: "Windows XP Startup.mp3", source: "/music/startup.mp3" },
-    { name: "Tour.mp3", source: "/music/tour.mp3" },
-    { name: "Symphony No. 9.mp3", source: "/music/symphony.mp3" },
-  ]);
+  const [playlist, setPlaylist] = useState<Track[]>(() => {
+    const musicFiles = import.meta.glob("/src/assets/musics/*.mp3", {
+      eager: true,
+      query: "?url",
+      import: "default",
+    });
+
+    return Object.entries(musicFiles).map(([path, url]) => {
+      const name = path.split("/").pop() || "Unknown Track";
+      return {
+        name,
+        source: url as string,
+      };
+    });
+  });
   const [currentTrackIndex, setCurrentTrackIndex] = useState<number>(-1);
   const [isPlaying, setIsPlaying] = useState(false);
   const [duration, setDuration] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
+  const [volume, setVolume] = useState(0.3);
 
   const audioRef = useRef<HTMLAudioElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -99,6 +110,12 @@ export const useAudioPlayer = () => {
     }
   }, [isPlaying]);
 
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.volume = volume;
+    }
+  }, [volume]);
+
   const updateTime = () => {
     if (audioRef.current) {
       setCurrentTime(audioRef.current.currentTime);
@@ -126,5 +143,7 @@ export const useAudioPlayer = () => {
     prevTrack,
     updateTime,
     updateDuration,
+    volume,
+    setVolume,
   };
 };

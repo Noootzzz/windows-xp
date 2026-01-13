@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Music } from "lucide-react";
+import { Music, Volume2 } from "lucide-react";
 import { XPWindow } from "../os/XPWindow";
 
 // Helper for formatting time
@@ -35,6 +35,8 @@ export const MusicPlayer = ({
     togglePlay,
     nextTrack,
     prevTrack,
+    volume,
+    setVolume,
   } = audioState;
 
   return (
@@ -116,6 +118,20 @@ export const MusicPlayer = ({
           >
             +
           </button>
+        </div>
+
+        {/* Volume Control */}
+        <div className="flex items-center gap-2 px-8">
+          <Volume2 size={16} className="text-[#ccff00]" />
+          <input
+            type="range"
+            min="0"
+            max="1"
+            step="0.01"
+            value={volume}
+            onChange={(e) => setVolume(parseFloat(e.target.value))}
+            className="w-full h-1 bg-[#444] rounded-lg appearance-none cursor-pointer accent-[#ccff00]"
+          />
         </div>
 
         {/* Playlist */}
