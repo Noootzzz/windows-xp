@@ -11,22 +11,20 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({
   onDownload,
 }) => {
   return (
-    <div className="flex justify-between items-center p-6 bg-[#181818] border-t border-[#333]">
+    <div className="flex items-center gap-4">
       <button
         onClick={onGenerate}
-        className="px-8 py-4 bg-[#252525] text-[#ccff00] border border-[#ccff00]/40 hover:border-[#ccff00] rounded-[2px] text-base cursor-pointer hover:bg-[#ccff00]/10 transition-all flex items-center gap-3 font-bold tracking-widest uppercase shadow-md active:translate-y-[1px]"
-        style={{ fontFamily: '"Share Tech Mono", monospace' }}
+        className="px-10 py-4 bg-[#ccff00] text-black hover:bg-[#ddff33] rounded-[6px] text-[14px] cursor-pointer transition-all flex items-center gap-3 font-black tracking-[2px] uppercase active:scale-95 active-pulse shadow-[0_0_20px_rgba(204,255,0,0.2)]"
       >
-        <Play size={24} className="text-[#ccff00]" />
-        GENERATE ACID
+        <Play size={18} fill="currentColor" />
+        Randomize
       </button>
       <button
         onClick={onDownload}
-        className="px-8 py-4 bg-[#252525] text-[#888] hover:text-white border border-[#444] hover:border-[#888] rounded-[2px] text-base cursor-pointer hover:bg-[#333] transition-all flex items-center gap-3 font-bold tracking-widest uppercase shadow-md active:translate-y-[1px]"
-        style={{ fontFamily: '"Share Tech Mono", monospace' }}
+        className="px-8 py-4 bg-white/5 text-white/80 hover:text-white hover:bg-white/10 border border-white/10 rounded-[6px] text-[13px] cursor-pointer transition-all flex items-center gap-3 font-bold tracking-[2px] uppercase active:scale-95"
       >
-        <Download size={24} />
-        SAVE TO DISK
+        <Download size={18} />
+        Save to Disk
       </button>
     </div>
   );

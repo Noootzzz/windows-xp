@@ -7,6 +7,7 @@ import {
 import { useEffect, useRef, useMemo } from "react";
 import * as THREE from "three";
 import { WindowsXPDesktop } from "../../components/WindowsXPDesktop";
+import BootScreen from "../../components/BootScreen";
 
 export default function Screen() {
   const { scene } = useGLTF(computerModel);
@@ -68,6 +69,9 @@ export default function Screen() {
             style={{ width: "1200px", height: "1050px", overflow: "hidden" }}
             scale={0.2}
           >
+            {screen === "booting" && (
+              <BootScreen />
+            )}
             {screen === "on" && (
               <WindowsXPDesktop />
             )}

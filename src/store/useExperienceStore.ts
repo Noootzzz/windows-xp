@@ -14,7 +14,9 @@ export const useExperienceStore = create<{
 export const useScreenStore = create<{
   screen: "off" | "on" | "booting"
   setScreen: (screen: "off" | "on" | "booting") => void
+  startBoot: () => void
 }>((set) => ({
-  screen: "on",
+  screen: "off",
   setScreen: (screen) => set({ screen }),
+  startBoot: () => set({ screen: "booting" }),
 }))

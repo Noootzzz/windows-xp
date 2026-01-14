@@ -11,12 +11,13 @@ export default function ComputerCase() {
   const { scene } = useGLTF(computerModel);
   const setMode = useExperienceStore((s) => s.setMode);
   const setScreen = useScreenStore((s) => s.setScreen);
-  const screen = useScreenStore((s) => s.screen);
+  const screenState = useScreenStore((s) => s.screen);
+  const startBoot = useScreenStore((s) => s.startBoot);
 
   const toggleScreen = (e: any) => {
     e.stopPropagation();
-    if (screen === "off") {
-      setScreen("on");
+    if (screenState === "off") {
+      startBoot();
     } else {
       setMode("idle");
       setScreen("off");
@@ -51,7 +52,7 @@ export default function ComputerCase() {
       {parts.Drive002 && <primitive object={parts.Drive002} />}
       {parts.Indicator001 && (
         <>
-          {screen === "on" && (
+          {(screenState === "on" || screenState === "booting") && (
             <pointLight
               intensity={0.1}
               color="#ccff00"
@@ -77,7 +78,7 @@ export default function ComputerCase() {
       )}
       {parts.Indicator002 && (
         <>
-          {screen === "off" && (
+          {screenState === "off" && (
             <pointLight
               intensity={0.5}  
               color="#ff0000"

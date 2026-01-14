@@ -1,11 +1,12 @@
 import React from "react";
 import { XPWindow } from "../../components/os/XPWindow";
 import { StatusBar } from "../../components/ui/status-bar";
-import { useAlbumCover, useCanvasDrawing, useTextDragging } from "./hooks";
+import { useAlbumCover, useTextDragging } from "./hooks";
 import { CanvasPreview } from "./components/CanvasPreview";
 import { TextControls } from "./components/TextControls";
-import { ChaosSlider } from "./components/ChaosSlider";
 import { ActionButtons } from "./components/ActionButtons";
+import { SourceSelector } from "./components/SourceSelector";
+import { FilterSelector } from "./components/FilterSelector";
 import type { AlbumCoverGeneratorProps } from "./types";
 
 export const AlbumCoverGenerator: React.FC<AlbumCoverGeneratorProps> = ({
@@ -15,60 +16,157 @@ export const AlbumCoverGenerator: React.FC<AlbumCoverGeneratorProps> = ({
   const {
     customText,
     setCustomText,
-    chaosLevel,
-    setChaosLevel,
     textPos,
     setTextPos,
-    randomizeText,
+    activeImage,
+    setActiveImage,
+    activeFilter,
+    setActiveFilter,
+    activeColors,
+    setActiveColors,
+    intensity,
+    setIntensity,
+    grainIntensity,
+    setGrainIntensity,
+    circularIntensity,
+    setCircularIntensity,
+    canvasRef,
     downloadArt,
+    randomizeAll,
   } = useAlbumCover();
 
-  const { canvasRef, generateBackground } = useCanvasDrawing(
-    customText,
-    textPos,
-    chaosLevel
-  );
-
   const { isDragging, handleMouseDown, handleMouseMove, handleMouseUp } =
-    useTextDragging(canvasRef, customText, textPos, setTextPos);
+    useTextDragging(canvasRef, textPos, setTextPos);
 
   return (
     <XPWindow
-      title="GAMEBOY_ACID_GEN.exe"
-      initialPosition={{ x: 300, y: 50 }}
-      width="w-[530px]"
+      title="HARLEM_COVER_GEN.exe"
+      initialPosition={{ x: 150, y: 20 }}
+      width="w-[820px]"
       onClose={onClose}
       onMinimize={onMinimize}
       icon="/paint.png"
     >
       <div
-        className="flex flex-col bg-[#111]"
+        className="flex flex-col bg-[#080808] text-white"
         style={{ fontFamily: '"Share Tech Mono", monospace' }}
       >
-        <CanvasPreview
-          canvasRef={canvasRef}
-          isDragging={isDragging}
-          onMouseDown={handleMouseDown}
-          onMouseMove={handleMouseMove}
-          onMouseUp={handleMouseUp}
-        />
+        <div className="flex relative overflow-hidden">
+          {/* Main Preview Area */}
+          <div className="flex-1 bg-[#000] p-6 flex items-center justify-center relative">
+            <div className="relative group shadow-[0_0_80px_rgba(0,0,0,0.8)]">
+               <CanvasPreview
+                canvasRef={canvasRef}
+                isDragging={isDragging}
+                onMouseDown={handleMouseDown}
+                onMouseMove={handleMouseMove}
+                onMouseUp={handleMouseUp}
+              />
+              <div className="absolute inset-0 border border-white/5 pointer-events-none group-hover:border-white/10 transition-colors" />
+            </div>
+          </div>
 
-        <div className="grid grid-cols-2 gap-4 p-4 bg-[#1a1a1a] border-t border-[#333]">
-          <TextControls
-            customText={customText}
-            onTextChange={setCustomText}
-            onRandomize={randomizeText}
-          />
-          <ChaosSlider value={chaosLevel} onChange={setChaosLevel} />
+          {/* Right Sidebar - Glassmorphism */}
+          <div className="w-80 harlem-glass p-7 flex flex-col gap-10 overflow-y-auto h-[550px] border-l border-white/5 scrollbar-hide">
+            <div className="flex flex-col gap-4">
+              <SourceSelector 
+                activeImage={activeImage} 
+                onImageChange={setActiveImage} 
+              />
+            </div>
+            
+            <div className="flex flex-col gap-4">
+              <FilterSelector 
+                activeFilter={activeFilter}
+                onFilterChange={setActiveFilter}
+                activeColors={activeColors}
+                onColorsChange={setActiveColors}
+              />
+            </div>
+
+            <div className="space-y-8 pt-4 border-t border-white/5">
+              <div className="flex flex-col gap-4">
+                <div className="flex justify-between items-center">
+                  <label className="text-[11px] text-white/40 uppercase tracking-[2.5px] font-black">
+                    Intensité Effet
+                  </label>
+                  <span className="text-[11px] text-[#ccff00] font-bold">{intensity}%</span>
+                </div>
+                <input 
+                  type="range"
+                  min="0"
+                  max="100"
+                  value={intensity}
+                  onChange={(e) => setIntensity(parseInt(e.target.value))}
+                  className="harlem-slider"
+                />
+              </div>
+
+              <div className="flex flex-col gap-4">
+                <div className="flex justify-between items-center">
+                  <label className="text-[11px] text-white/40 uppercase tracking-[2.5px] font-black">
+                    Texture Grain
+                  </label>
+                  <span className="text-[11px] text-[#ccff00] font-bold">{grainIntensity}%</span>
+                </div>
+                <input 
+                  type="range"
+                  min="0"
+                  max="100"
+                  value={grainIntensity}
+                  onChange={(e) => setGrainIntensity(parseInt(e.target.value))}
+                  className="harlem-slider"
+                />
+              </div>
+
+              <div className="flex flex-col gap-4">
+                <div className="flex justify-between items-center">
+                  <label className="text-[11px] text-white/40 uppercase tracking-[2.5px] font-black">
+                    Motifs Cercles
+                  </label>
+                  <span className="text-[11px] text-[#ccff00] font-bold">{circularIntensity}%</span>
+                </div>
+                <input 
+                  type="range"
+                  min="0"
+                  max="100"
+                  value={circularIntensity}
+                  onChange={(e) => setCircularIntensity(parseInt(e.target.value))}
+                  className="harlem-slider"
+                />
+              </div>
+            </div>
+          </div>
         </div>
 
-        <ActionButtons
-          onGenerate={generateBackground}
-          onDownload={() => downloadArt(canvasRef)}
-        />
+        <div className="px-6 py-4 bg-[#111] border-t border-white/5 flex items-center justify-between gap-6">
+          <div className="flex-1">
+            <TextControls
+              customText={customText}
+              onTextChange={setCustomText}
+              onRandomize={() => setCustomText("HARLEM")}
+            />
+          </div>
+          
+          <ActionButtons
+            onGenerate={randomizeAll}
+            onDownload={downloadArt}
+          />
+        </div>
       </div>
 
-      <StatusBar>Ready</StatusBar>
+      <StatusBar className="bg-[#050505] text-white/30 border-t border-white/5">
+        <div className="flex items-center gap-4">
+          <span className="flex items-center gap-1">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#ccff00] animate-pulse" />
+            ENGINE: ACTIVE
+          </span>
+          <span className="opacity-50">|</span>
+          <span>FILTER: {activeFilter.toUpperCase()}</span>
+          <span className="opacity-50">|</span>
+          <span>COLORS: {activeColors.name.toUpperCase()}</span>
+        </div>
+      </StatusBar>
     </XPWindow>
   );
 };

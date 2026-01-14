@@ -1,201 +1,148 @@
 import { useRef, useState, useCallback, useEffect } from "react";
-import { CANVAS_CONFIG, DEFAULT_WORDS, GENERATION_CONFIG } from "./constants";
-import { generateAcidBackground, drawComposition } from "./drawing";
+import { 
+  DEFAULT_SOURCE_IMAGE, 
+  DEFAULT_FILTER, 
+  DEFAULT_COLOR_PRESET, 
+  DEFAULT_INTENSITY,
+  DEFAULT_GRAIN,
+  DEFAULT_CIRCULAR,
+  SOURCE_IMAGES,
+  FILTERS,
+  COLOR_PRESETS
+} from "./presets";
+import { loadImage, generateImageComposition } from "./drawing";
 import type { Position } from "./types";
+import type { FilterType, SourceImage, ColorPreset } from "./presets/types";
 
-/**
- * Hook to manage canvas drawing operations
- */
-export const useCanvasDrawing = (
-  customText: string,
-  textPos: Position,
-  chaosLevel: number
-) => {
+export const useAlbumCover = () => {
+  const [customText, setCustomText] = useState("ASTROWORLD");
+  const [textPos, setTextPos] = useState<Position>({ x: 300, y: 500 });
+  const [activeImage, setActiveImage] = useState<SourceImage>(DEFAULT_SOURCE_IMAGE);
+  const [activeFilter, setActiveFilter] = useState<FilterType>(DEFAULT_FILTER);
+  const [activeColors, setActiveColors] = useState<ColorPreset>(DEFAULT_COLOR_PRESET);
+  const [intensity, setIntensity] = useState<number>(DEFAULT_INTENSITY);
+  const [grainIntensity, setGrainIntensity] = useState<number>(DEFAULT_GRAIN);
+  const [circularIntensity, setCircularIntensity] = useState<number>(DEFAULT_CIRCULAR);
+  
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const bgImageDataRef = useRef<ImageData | null>(null);
+  const imageCacheRef = useRef<Map<string, HTMLImageElement>>(new Map());
 
-  const getCanvasContext = useCallback(() => {
+  const draw = useCallback(async () => {
     const canvas = canvasRef.current;
-    if (!canvas) return null;
+    if (!canvas) return;
 
     const ctx = canvas.getContext("2d");
-    if (!ctx) return null;
+    if (!ctx) return;
 
-    return {
-      ctx,
-      width: canvas.width,
-      height: canvas.height,
-    };
+    let img = imageCacheRef.current.get(activeImage.path);
+    if (!img) {
+      try {
+        img = await loadImage(activeImage.path);
+        imageCacheRef.current.set(activeImage.path, img);
+      } catch (err) {
+        console.error("Failed to load image:", err);
+        return;
+      }
+    }
+
+    generateImageComposition(
+      { ctx, width: canvas.width, height: canvas.height },
+      img,
+      activeFilter,
+      activeColors,
+      intensity,
+      grainIntensity,
+      circularIntensity,
+      customText,
+      textPos
+    );
+  }, [activeImage, activeFilter, activeColors, intensity, grainIntensity, circularIntensity, customText, textPos]);
+
+  useEffect(() => {
+    draw();
+  }, [draw]);
+
+  const downloadArt = useCallback(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const link = document.createElement("a");
+    link.download = `travis_cover_${Date.now()}.png`;
+    link.href = canvas.toDataURL();
+    link.click();
   }, []);
 
-  const draw = useCallback(() => {
-    const context = getCanvasContext();
-    if (!context || !bgImageDataRef.current) return;
-
-    drawComposition(context, bgImageDataRef.current, customText, textPos);
-  }, [customText, textPos, getCanvasContext]);
-
-  const generateBackground = useCallback(() => {
-    const context = getCanvasContext();
-    if (!context) return;
-
-    bgImageDataRef.current = generateAcidBackground(context, chaosLevel);
-    draw();
-  }, [chaosLevel, draw, getCanvasContext]);
-
-  useEffect(() => {
-    generateBackground();
-  }, [chaosLevel, generateBackground]);
-
-  useEffect(() => {
-    draw();
-  }, [customText, textPos, draw]);
+  const randomizeAll = useCallback(() => {
+    const randomImage = SOURCE_IMAGES[Math.floor(Math.random() * SOURCE_IMAGES.length)];
+    const filterIds = Object.keys(FILTERS) as FilterType[];
+    const randomFilter = filterIds[Math.floor(Math.random() * filterIds.length)];
+    const randomColors = COLOR_PRESETS[Math.floor(Math.random() * COLOR_PRESETS.length)];
+    
+    setActiveImage(randomImage);
+    setActiveFilter(randomFilter);
+    setActiveColors(randomColors);
+    setIntensity(Math.random() * 100);
+    setGrainIntensity(Math.random() * 50);
+    setCircularIntensity(Math.random() * 80);
+  }, []);
 
   return {
+    customText,
+    setCustomText,
+    textPos,
+    setTextPos,
+    activeImage,
+    setActiveImage,
+    activeFilter,
+    setActiveFilter,
+    activeColors,
+    setActiveColors,
+    intensity,
+    setIntensity,
+    grainIntensity,
+    setGrainIntensity,
+    circularIntensity,
+    setCircularIntensity,
     canvasRef,
-    generateBackground,
-    draw,
-    getCanvasContext,
+    downloadArt,
+    randomizeAll,
+    draw
   };
 };
 
-/**
- * Hook to manage text dragging functionality
- */
 export const useTextDragging = (
   canvasRef: React.RefObject<HTMLCanvasElement | null>,
-  customText: string,
   textPos: Position,
   setTextPos: (pos: Position) => void
 ) => {
   const [isDragging, setIsDragging] = useState(false);
   const [dragOffset, setDragOffset] = useState<Position>({ x: 0, y: 0 });
 
-  const getMousePosition = useCallback(
-    (e: React.MouseEvent<HTMLCanvasElement>): Position | null => {
-      const canvas = canvasRef.current;
-      if (!canvas) return null;
-
-      const rect = canvas.getBoundingClientRect();
-      const scaleX = canvas.width / rect.width;
-      const scaleY = canvas.height / rect.height;
-
-      return {
-        x: (e.clientX - rect.left) * scaleX,
-        y: (e.clientY - rect.top) * scaleY,
-      };
-    },
-    [canvasRef]
-  );
-
-  const getTextBounds = useCallback(() => {
+  const handleMouseDown = useCallback((e: React.MouseEvent<HTMLCanvasElement>) => {
     const canvas = canvasRef.current;
-    if (!canvas) return null;
+    if (!canvas) return;
 
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return null;
+    const rect = canvas.getBoundingClientRect();
+    const x = (e.clientX - rect.left) * (canvas.width / rect.width);
+    const y = (e.clientY - rect.top) * (canvas.height / rect.height);
 
-    ctx.font = `${CANVAS_CONFIG.FONT_SIZE}px ${CANVAS_CONFIG.FONT_FAMILY}`;
-    const metrics = ctx.measureText(customText.toUpperCase());
-    const textWidth = metrics.width;
-    const textHeight = CANVAS_CONFIG.FONT_SIZE;
-    const padding = GENERATION_CONFIG.TEXT_PADDING;
+    if (Math.abs(x - textPos.x) < 100 && Math.abs(y - textPos.y) < 50) {
+      setIsDragging(true);
+      setDragOffset({ x: x - textPos.x, y: y - textPos.y });
+    }
+  }, [textPos, canvasRef]);
 
-    return {
-      left: textPos.x - textWidth / 2 - padding,
-      right: textPos.x + textWidth / 2 + padding,
-      top: textPos.y - textHeight / 2 - padding,
-      bottom: textPos.y + textHeight / 2 + padding,
-    };
-  }, [canvasRef, customText, textPos]);
+  const handleMouseMove = useCallback((e: React.MouseEvent<HTMLCanvasElement>) => {
+    if (!isDragging || !canvasRef.current) return;
 
-  const handleMouseDown = useCallback(
-    (e: React.MouseEvent<HTMLCanvasElement>) => {
-      const mousePos = getMousePosition(e);
-      const bounds = getTextBounds();
+    const rect = canvasRef.current.getBoundingClientRect();
+    const x = (e.clientX - rect.left) * (canvasRef.current.width / rect.width);
+    const y = (e.clientY - rect.top) * (canvasRef.current.height / rect.height);
 
-      if (!mousePos || !bounds) return;
+    setTextPos({ x: x - dragOffset.x, y: y - dragOffset.y });
+  }, [isDragging, dragOffset, setTextPos, canvasRef]);
 
-      if (
-        mousePos.x >= bounds.left &&
-        mousePos.x <= bounds.right &&
-        mousePos.y >= bounds.top &&
-        mousePos.y <= bounds.bottom
-      ) {
-        setIsDragging(true);
-        setDragOffset({
-          x: mousePos.x - textPos.x,
-          y: mousePos.y - textPos.y,
-        });
-      }
-    },
-    [getMousePosition, getTextBounds, textPos]
-  );
+  const handleMouseUp = useCallback(() => setIsDragging(false), []);
 
-  const handleMouseMove = useCallback(
-    (e: React.MouseEvent<HTMLCanvasElement>) => {
-      if (!isDragging) return;
-
-      const mousePos = getMousePosition(e);
-      if (!mousePos) return;
-
-      setTextPos({
-        x: mousePos.x - dragOffset.x,
-        y: mousePos.y - dragOffset.y,
-      });
-    },
-    [isDragging, getMousePosition, dragOffset, setTextPos]
-  );
-
-  const handleMouseUp = useCallback(() => {
-    setIsDragging(false);
-  }, []);
-
-  return {
-    isDragging,
-    handleMouseDown,
-    handleMouseMove,
-    handleMouseUp,
-  };
-};
-
-/**
- * Hook to manage album cover state and actions
- */
-export const useAlbumCover = () => {
-  const [customText, setCustomText] = useState("ACID");
-  const [chaosLevel, setChaosLevel] = useState<number>(
-    GENERATION_CONFIG.DEFAULT_CHAOS
-  );
-  const [textPos, setTextPos] = useState<Position>({ x: 300, y: 300 });
-
-  const randomizeText = useCallback(() => {
-    const randomWord =
-      DEFAULT_WORDS[Math.floor(Math.random() * DEFAULT_WORDS.length)];
-    setCustomText(randomWord);
-  }, []);
-
-  const downloadArt = useCallback(
-    (canvasRef: React.RefObject<HTMLCanvasElement | null>) => {
-      const canvas = canvasRef.current;
-      if (!canvas) return;
-
-      const link = document.createElement("a");
-      link.download = `gameboy_acid_${Date.now()}.png`;
-      link.href = canvas.toDataURL();
-      link.click();
-    },
-    []
-  );
-
-  return {
-    customText,
-    setCustomText,
-    chaosLevel,
-    setChaosLevel,
-    textPos,
-    setTextPos,
-    randomizeText,
-    downloadArt,
-  };
+  return { isDragging, handleMouseDown, handleMouseMove, handleMouseUp };
 };
