@@ -44,7 +44,7 @@ export function DesktopIcon({
       </div>
       <span
         className={`
-          text-white text-xs text-center leading-tight drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]
+          text-white text-xl text-center leading-tight drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]
         
         `}
       >

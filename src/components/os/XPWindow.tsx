@@ -40,7 +40,7 @@ export const XPWindow = ({
               ? "w-full h-[calc(100vh-30px)] rounded-none left-0 top-0 border-0"
               : `${width} rounded-t-lg border-[3px]`
           } 
-          bg-[#1a1a1a] border-[#333] overflow-hidden
+          bg-[#1a1a1a] border-[#333]
         `}
         style={isMaximized ? { transform: "none !important" } : {}}
       >
