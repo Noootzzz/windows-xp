@@ -8,6 +8,7 @@ import Screen from "./models/Screen";
 import ComputerCase from "./models/ComputerCase";
 import KeyBoard from "./models/KeyBoard";
 import { useExperienceStore } from "../store/useExperienceStore";
+import Desk from "./models/Desk";
 
 export default function Experience() {
   const mode = useExperienceStore((s) => s.mode);
@@ -25,6 +26,7 @@ export default function Experience() {
       <Environment />
 
       <Suspense fallback={null}>
+        <Desk />
         <Screen />
         <Computer />
         <ComputerCase />

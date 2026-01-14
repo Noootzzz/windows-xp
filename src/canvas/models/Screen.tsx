@@ -20,7 +20,6 @@ export default function Screen() {
     return original ? original.clone(true) : null;
   }, [scene]);
 
-
   useEffect(() => {
     if (materialRef.current) {
       if (screen === "off") {
@@ -50,15 +49,28 @@ export default function Screen() {
             setMode("focus");
           }}
         >
+        {screen === "on" && (
+          <pointLight
+            intensity={1}
+            color={"#ccff00"}
+            position={[0, 0.2, 0.3]}
+            distance={3}
+            decay={1.5}
+            castShadow
+          />
+        )}
+
           <Html
             transform
-            position={[0,0.2,0]}
+            position={[0, 0.2, 0]}
             className="htmlScreen"
             occlude="blending"
             style={{ width: "1200px", height: "1050px", overflow: "hidden" }}
-            scale={0.20}
+            scale={0.2}
           >
-            <WindowsXPDesktop />
+            {screen === "on" && (
+              <WindowsXPDesktop />
+            )}
             {mode !== "focus" && (
               <div
                 style={{
