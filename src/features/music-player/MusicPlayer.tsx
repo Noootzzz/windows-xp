@@ -29,7 +29,8 @@ export const MusicPlayer: React.FC<MusicPlayerProps> = ({
     setVolume,
   } = audioState;
 
-  const currentTrack = currentTrackIndex !== -1 ? playlist[currentTrackIndex] : null;
+  const currentTrack =
+    currentTrackIndex !== -1 ? playlist[currentTrackIndex] : null;
 
   const playlistTracks: PlaylistTrack[] = playlist.map((file, index) => ({
     id: index,
@@ -45,7 +46,7 @@ export const MusicPlayer: React.FC<MusicPlayerProps> = ({
       onMinimize={onMinimize}
       icon={WINDOW_CONFIG.ICON}
     >
-      <div 
+      <div
         className="h-[500px] bg-[#1a1a1a] p-4 flex flex-col gap-4"
         style={{ backgroundColor: PLAYER_COLORS.BACKGROUND }}
       >

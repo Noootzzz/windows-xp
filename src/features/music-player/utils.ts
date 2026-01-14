@@ -3,10 +3,10 @@
  */
 export const formatTime = (time: number): string => {
   if (isNaN(time)) return "00:00";
-  
+
   const minutes = Math.floor(time / 60);
   const seconds = Math.floor(time % 60);
-  
+
   return `${minutes.toString().padStart(2, "0")}:${seconds
     .toString()
     .padStart(2, "0")}`;
@@ -15,7 +15,10 @@ export const formatTime = (time: number): string => {
 /**
  * Formats duration string with current time and total duration
  */
-export const formatDuration = (currentTime: number, duration: number): string => {
+export const formatDuration = (
+  currentTime: number,
+  duration: number
+): string => {
   return `${formatTime(currentTime)} / ${formatTime(duration)}`;
 };
 

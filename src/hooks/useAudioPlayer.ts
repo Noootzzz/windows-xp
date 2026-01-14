@@ -21,14 +21,9 @@ export const useAudioPlayer = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const { playlist, addTracksToPlaylist } = usePlaylist();
-  
-  const {
-    isPlaying,
-    playTrack,
-    togglePlay,
-    nextTrack,
-    prevTrack,
-  } = usePlaybackControls(playlist, currentTrackIndex, setCurrentTrackIndex);
+
+  const { isPlaying, playTrack, togglePlay, nextTrack, prevTrack } =
+    usePlaybackControls(playlist, currentTrackIndex, setCurrentTrackIndex);
 
   const { duration, currentTime, updateTime, updateDuration } = useAudioTime();
 
@@ -37,7 +32,7 @@ export const useAudioPlayer = () => {
       if (e.target.files) {
         const newFiles = Array.from(e.target.files);
         const addedCount = addTracksToPlaylist(newFiles);
-        
+
         if (
           currentTrackIndex === -1 &&
           playlist.length === 0 &&
@@ -57,7 +52,7 @@ export const useAudioPlayer = () => {
     if (activeTrack && audioRef.current) {
       const fileUrl = getAudioUrl(activeTrack.source);
       audioRef.current.src = fileUrl;
-      
+
       if (isPlaying) {
         audioRef.current.play().catch((e) => console.error("Play failed", e));
       }

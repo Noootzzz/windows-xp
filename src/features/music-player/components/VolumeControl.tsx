@@ -13,7 +13,11 @@ export const VolumeControl: React.FC<VolumeControlProps> = ({
 }) => {
   return (
     <div className="flex items-center gap-2 px-8">
-      <Volume2 size={16} className="text-[#ccff00]" style={{ color: PLAYER_COLORS.ACCENT }} />
+      <Volume2
+        size={16}
+        className="text-[#ccff00]"
+        style={{ color: PLAYER_COLORS.ACCENT }}
+      />
       <input
         type="range"
         min={PLAYER_CONFIG.VOLUME_MIN}

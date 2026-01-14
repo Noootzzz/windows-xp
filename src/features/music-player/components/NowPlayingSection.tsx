@@ -25,7 +25,13 @@ export const NowPlayingSection: React.FC<NowPlayingSectionProps> = ({
     <NowPlaying
       title={trackName}
       duration={formattedDuration}
-      icon={<Music className="text-[#ccff00]" size={32} style={{ color: PLAYER_COLORS.ACCENT }} />}
+      icon={
+        <Music
+          className="text-[#ccff00]"
+          size={32}
+          style={{ color: PLAYER_COLORS.ACCENT }}
+        />
+      }
       visualizer
       isPlaying={isPlaying}
     />
