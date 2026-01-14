@@ -37,7 +37,7 @@ export const XPWindow = ({
           absolute flex flex-col font-sans shadow-2xl z-40 pointer-events-auto
           ${
             isMaximized
-              ? "w-full h-[calc(100vh-30px)] rounded-none left-0 top-0 border-0"
+              ? "w-full h-[calc(100vh-35px)] rounded-none left-0 top-0 border-0"
               : `${width} rounded-t-lg border-[3px]`
           } 
           bg-[#1a1a1a] border-[#333]
