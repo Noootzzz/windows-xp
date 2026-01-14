@@ -20,7 +20,7 @@ export const Taskbar = ({
 }: TaskbarProps) => {
   return (
     <div
-      className="absolute bottom-0 left-0 w-full h-[30px] flex items-center z-50 select-none font-sans"
+      className="absolute bottom-0 left-0 px-10 w-full h-[30px] flex items-center z-50 select-none font-sans"
       style={{
         background:
           "linear-gradient(to bottom, #333 0%, #1a1a1a 10%, #000 100%)",
@@ -30,8 +30,8 @@ export const Taskbar = ({
       {/* Start Button */}
       <button
         className="
-        h-full pl-2 pr-6 
-        flex items-center gap-2 
+        h-full pl-2 pr-6
+        flex items-center gap-2
         rounded-r-[15px]
         cursor-pointer
         mr-2

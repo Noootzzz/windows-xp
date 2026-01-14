@@ -16,13 +16,11 @@ export const Background = ({
 }: BackgroundProps) => {
   return (
     <>
-      {/* WallPaper */}
       <div
         className="absolute inset-0 bg-cover bg-center pointer-events-none"
         style={{ backgroundImage: "url(/windows_xp_bg.png)" }}
       />
 
-      {/* Desktop Icons Area */}
       <div className="absolute inset-0 p-4 z-30 flex flex-col gap-4 flex-wrap content-start h-full pb-12 w-fit pointer-events-none">
         <div className="pointer-events-auto contents">
           <DesktopIcon

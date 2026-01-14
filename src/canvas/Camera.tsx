@@ -1,5 +1,5 @@
 import { useThree, useFrame } from "@react-three/fiber";
-import { useExperienceStore } from "./store/useExperienceStore";
+import { useExperienceStore } from "../store/useExperienceStore";
 import * as THREE from "three";
 
 const idle = new THREE.Vector3(0, 2.5, 18);

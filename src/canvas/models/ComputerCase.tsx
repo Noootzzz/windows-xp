@@ -1,6 +1,6 @@
-import { useGLTF } from "@react-three/drei"
-import computerModel from "../../assets/models/Computer.glb"
-import { useExperienceStore, useScreenStore } from "../store/useExperienceStore"
+    import { useGLTF } from "@react-three/drei"
+    import computerModel from "../../assets/models/Computer.glb"
+    import { useExperienceStore, useScreenStore } from "../../store/useExperienceStore"
 import { useMemo } from "react"
 import * as THREE from "three"
 
