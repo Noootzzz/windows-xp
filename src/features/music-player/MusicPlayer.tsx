@@ -1,28 +1,18 @@
 import React from "react";
-import { Music, Volume2 } from "lucide-react";
 import { XPWindow } from "../../components/os/XPWindow";
-import { MediaControls, NowPlaying, Playlist } from "../../components/ui/media-player";
+import { MediaControls, Playlist } from "../../components/ui/media-player";
+import { FileInput } from "./components/FileInput";
+import { AddMusicButton } from "./components/AddMusicButton";
+import { VolumeControl } from "./components/VolumeControl";
+import { NowPlayingSection } from "./components/NowPlayingSection";
+import { WINDOW_CONFIG, PLAYER_COLORS, AUDIO_PATTERNS } from "./constants";
+import type { MusicPlayerProps, PlaylistTrack } from "./types";
 
-const formatTime = (time: number) => {
-  if (isNaN(time)) return "00:00";
-  const minutes = Math.floor(time / 60);
-  const seconds = Math.floor(time % 60);
-  return `${minutes.toString().padStart(2, "0")}:${seconds
-    .toString()
-    .padStart(2, "0")}`;
-};
-
-interface MusicPlayerProps {
-  onClose: () => void;
-  onMinimize: () => void;
-  audioState: any;
-}
-
-export const MusicPlayer = ({
+export const MusicPlayer: React.FC<MusicPlayerProps> = ({
   onClose,
   onMinimize,
   audioState,
-}: MusicPlayerProps) => {
+}) => {
   const {
     playlist,
     currentTrackIndex,
@@ -39,36 +29,36 @@ export const MusicPlayer = ({
     setVolume,
   } = audioState;
 
-  const currentTrack = currentTrackIndex !== -1 && playlist[currentTrackIndex]
-    ? playlist[currentTrackIndex].name
-    : "No music loaded";
+  const currentTrack = currentTrackIndex !== -1 ? playlist[currentTrackIndex] : null;
 
-  const formattedDuration = `${formatTime(currentTime)} / ${formatTime(duration)}`;
+  const playlistTracks: PlaylistTrack[] = playlist.map((file, index) => ({
+    id: index,
+    name: file.name,
+  }));
 
   return (
     <XPWindow
-      title="Music Player"
-      initialPosition={{ x: 150, y: 100 }}
+      title={WINDOW_CONFIG.TITLE}
+      initialPosition={WINDOW_CONFIG.INITIAL_POSITION}
       width="w-[500px]"
       onClose={onClose}
       onMinimize={onMinimize}
-      icon="/music.png"
+      icon={WINDOW_CONFIG.ICON}
     >
-      <div className="h-[500px] bg-[#1a1a1a] p-4 flex flex-col gap-4">
-        <input
-          type="file"
-          ref={fileInputRef}
-          onChange={handleFileSelect}
-          multiple
-          accept="audio/*"
-          className="hidden"
+      <div 
+        className="h-[500px] bg-[#1a1a1a] p-4 flex flex-col gap-4"
+        style={{ backgroundColor: PLAYER_COLORS.BACKGROUND }}
+      >
+        <FileInput
+          fileInputRef={fileInputRef}
+          onFileSelect={handleFileSelect}
+          acceptTypes={AUDIO_PATTERNS.ACCEPT_TYPES}
         />
 
-        <NowPlaying
-          title={currentTrack}
-          duration={formattedDuration}
-          icon={<Music className="text-[#ccff00]" size={32} />}
-          visualizer
+        <NowPlayingSection
+          currentTrack={currentTrack}
+          currentTime={currentTime}
+          duration={duration}
           isPlaying={isPlaying}
         />
 
@@ -79,34 +69,12 @@ export const MusicPlayer = ({
           isPlaying={isPlaying}
         />
 
-        <div className="flex justify-center">
-          <button
-            onClick={() => fileInputRef.current?.click()}
-            className="w-10 h-10 rounded-full bg-gradient-to-b from-[#444] to-[#222] border border-[#555] flex items-center justify-center text-[#ccff00] shadow-sm active:translate-y-0.5 text-2xl font-bold pb-1 hover:brightness-110"
-            title="Add Music"
-          >
-            +
-          </button>
-        </div>
+        <AddMusicButton onClick={() => fileInputRef.current?.click()} />
 
-        <div className="flex items-center gap-2 px-8">
-          <Volume2 size={16} className="text-[#ccff00]" />
-          <input
-            type="range"
-            min="0"
-            max="1"
-            step="0.01"
-            value={volume}
-            onChange={(e) => setVolume(parseFloat(e.target.value))}
-            className="w-full h-1 bg-[#444] rounded-lg appearance-none cursor-pointer accent-[#ccff00]"
-          />
-        </div>
+        <VolumeControl volume={volume} onVolumeChange={setVolume} />
 
         <Playlist
-          tracks={playlist.map((file: any, index: number) => ({
-            id: index,
-            name: file.name,
-          }))}
+          tracks={playlistTracks}
           currentTrackIndex={currentTrackIndex}
           onTrackSelect={playTrack}
         />

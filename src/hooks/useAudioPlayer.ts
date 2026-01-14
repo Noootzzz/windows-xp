@@ -1,105 +1,76 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
+import { PLAYER_CONFIG } from "../features/music-player/constants";
+import {
+  usePlaylist,
+  usePlaybackControls,
+  useAudioTime,
+} from "../features/music-player/hooks/playback";
+import { getAudioUrl, isFileSource } from "../features/music-player/utils";
+import type { Track } from "../features/music-player/types";
 
-export interface Track {
-  name: string;
-  source: File | string;
-}
+export type { Track };
 
+/**
+ * Main audio player hook that orchestrates all music player functionality
+ */
 export const useAudioPlayer = () => {
-  const [playlist, setPlaylist] = useState<Track[]>(() => {
-    const musicFiles = import.meta.glob("/src/assets/musics/*.mp3", {
-      eager: true,
-      query: "?url",
-      import: "default",
-    });
-
-    return Object.entries(musicFiles).map(([path, url]) => {
-      const name = path.split("/").pop() || "Unknown Track";
-      return {
-        name,
-        source: url as string,
-      };
-    });
-  });
   const [currentTrackIndex, setCurrentTrackIndex] = useState<number>(-1);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [duration, setDuration] = useState(0);
-  const [currentTime, setCurrentTime] = useState(0);
-  const [volume, setVolume] = useState(0.3);
+  const [volume, setVolume] = useState(PLAYER_CONFIG.DEFAULT_VOLUME);
 
   const audioRef = useRef<HTMLAudioElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      const newFiles = Array.from(e.target.files).map((file) => ({
-        name: file.name,
-        source: file,
-      }));
-      setPlaylist((prev) => [...prev, ...newFiles]);
-      if (
-        currentTrackIndex === -1 &&
-        playlist.length === 0 &&
-        newFiles.length > 0
-      ) {
-        setCurrentTrackIndex(0);
+  const { playlist, addTracksToPlaylist } = usePlaylist();
+  
+  const {
+    isPlaying,
+    playTrack,
+    togglePlay,
+    nextTrack,
+    prevTrack,
+  } = usePlaybackControls(playlist, currentTrackIndex, setCurrentTrackIndex);
+
+  const { duration, currentTime, updateTime, updateDuration } = useAudioTime();
+
+  const handleFileSelect = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      if (e.target.files) {
+        const newFiles = Array.from(e.target.files);
+        const addedCount = addTracksToPlaylist(newFiles);
+        
+        if (
+          currentTrackIndex === -1 &&
+          playlist.length === 0 &&
+          addedCount > 0
+        ) {
+          setCurrentTrackIndex(0);
+        }
       }
-    }
-  };
-
-  const playTrack = (index: number) => {
-    if (index >= 0 && index < playlist.length) {
-      setCurrentTrackIndex(index);
-      setIsPlaying(true);
-    }
-  };
-
-  const togglePlay = () => {
-    if (currentTrackIndex === -1 && playlist.length > 0) {
-      playTrack(0);
-    } else {
-      setIsPlaying(!isPlaying);
-    }
-  };
-
-  const nextTrack = () => {
-    if (currentTrackIndex < playlist.length - 1) {
-      playTrack(currentTrackIndex + 1);
-    } else {
-      playTrack(0);
-    }
-  };
-
-  const prevTrack = () => {
-    if (currentTrackIndex > 0) {
-      playTrack(currentTrackIndex - 1);
-    }
-  };
+    },
+    [addTracksToPlaylist, currentTrackIndex, playlist.length]
+  );
 
   const activeTrack = playlist[currentTrackIndex];
 
+  // Handle track changes
   useEffect(() => {
     if (activeTrack && audioRef.current) {
-      let fileUrl = "";
-      if (activeTrack.source instanceof File) {
-        fileUrl = URL.createObjectURL(activeTrack.source);
-      } else {
-        fileUrl = activeTrack.source as string;
-      }
-
+      const fileUrl = getAudioUrl(activeTrack.source);
       audioRef.current.src = fileUrl;
+      
       if (isPlaying) {
         audioRef.current.play().catch((e) => console.error("Play failed", e));
       }
 
       return () => {
-        if (activeTrack.source instanceof File) {
+        if (isFileSource(activeTrack.source)) {
           URL.revokeObjectURL(fileUrl);
         }
       };
     }
   }, [activeTrack]);
 
+  // Handle play/pause
   useEffect(() => {
     if (audioRef.current) {
       if (isPlaying) {
@@ -110,23 +81,24 @@ export const useAudioPlayer = () => {
     }
   }, [isPlaying]);
 
+  // Handle volume changes
   useEffect(() => {
     if (audioRef.current) {
       audioRef.current.volume = volume;
     }
   }, [volume]);
 
-  const updateTime = () => {
+  const handleUpdateTime = useCallback(() => {
     if (audioRef.current) {
-      setCurrentTime(audioRef.current.currentTime);
+      updateTime(audioRef.current);
     }
-  };
+  }, [updateTime]);
 
-  const updateDuration = () => {
+  const handleUpdateDuration = useCallback(() => {
     if (audioRef.current) {
-      setDuration(audioRef.current.duration);
+      updateDuration(audioRef.current);
     }
-  };
+  }, [updateDuration]);
 
   return {
     playlist,
@@ -141,8 +113,8 @@ export const useAudioPlayer = () => {
     togglePlay,
     nextTrack,
     prevTrack,
-    updateTime,
-    updateDuration,
+    updateTime: handleUpdateTime,
+    updateDuration: handleUpdateDuration,
     volume,
     setVolume,
   };
