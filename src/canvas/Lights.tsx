@@ -19,7 +19,7 @@ export default function Lights() {
 
       if (isOnRef.current) {
         nextFlickerRef.current = timeRef.current + Math.random() * 3 + 1.5;
-        const intensity = 200 + Math.random() * 50;
+        const intensity = 100 + Math.random() * 20;
         flickerSpot.current.intensity = intensity;
         flickerPoint.current.intensity = intensity * 0.05;
       } else {
@@ -42,8 +42,8 @@ export default function Lights() {
       <pointLight
         ref={flickerPoint}
         position={[0, 0, 4]}
-        intensity={10}
-        color="#ffffff"
+        intensity={2}
+        color="#6c840e"
         castShadow
         shadow-mapSize={[2048, 2048]}
       />
@@ -52,9 +52,9 @@ export default function Lights() {
       <spotLight
         ref={flickerSpot}
         position={[0, 8, 0]}
-        angle={0.35}
+        angle={1}
         penumbra={0.5}
-        intensity={200}
+        intensity={20}
         color="#fff5e0"
         castShadow
         shadow-mapSize={[2048, 2048]}
