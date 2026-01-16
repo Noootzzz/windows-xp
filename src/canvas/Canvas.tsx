@@ -1,8 +1,17 @@
 import { Canvas } from "@react-three/fiber";
 import Experience from "./Experience";
 import * as THREE from "three";
+import { useExperienceStore } from "../core/store";
 
 export default function CanvasRoot() {
+  const { mode, setMode } = useExperienceStore();
+
+  const handlePointerMissed = () => {
+    if (mode === "focus") {
+      setMode("idle");
+    }
+  };
+
   return (
     <Canvas
       shadows
@@ -13,9 +22,10 @@ export default function CanvasRoot() {
         outputColorSpace: THREE.SRGBColorSpace,
         alpha: true,
       }}
-      style={{ background: "transparent" }}
+      style={{ background: "transparent", cursor: mode === "focus" ? "pointer" : "auto" }}
+      onPointerMissed={handlePointerMissed}
     >
-      
+
       <Experience />
     </Canvas>
   );

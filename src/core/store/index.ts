@@ -26,6 +26,7 @@ export const useScreenStore = () =>
       screen: state.screen,
       setScreen: state.setScreen,
       startBoot: state.startBoot,
+      startExperience: state.startExperience,
     }))
   );
 

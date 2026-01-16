@@ -11,7 +11,14 @@ import { useExperienceStore } from "../core/store";
 import Desk from "./models/Desk";
 
 export default function Experience() {
-  const { mode } = useExperienceStore();
+  const { mode, setMode } = useExperienceStore();
+
+  const handleClickOutsideScreen = (e: any) => {
+    if (mode === "focus") {
+      e.stopPropagation();
+      setMode("idle");
+    }
+  };
 
   return (
     <>
@@ -26,11 +33,13 @@ export default function Experience() {
       <Environment />
 
       <Suspense fallback={null}>
-        <Desk />
+        <group onClick={handleClickOutsideScreen}>
+          <Desk />
+          <Computer />
+          <KeyBoard />
+        </group>
         <Screen />
-        <Computer />
         <ComputerCase />
-        <KeyBoard />
       </Suspense>
     </>
   );

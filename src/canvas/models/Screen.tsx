@@ -20,7 +20,7 @@ export default function Screen() {
 
   useEffect(() => {
     if (materialRef.current) {
-      if (screen === "off") {
+      if (screen === "off" || screen === "intro") {
         materialRef.current.color.setHex(0x000000);
         materialRef.current.opacity = 1;
       } else {
@@ -66,28 +66,27 @@ export default function Screen() {
             style={{ width: "1200px", height: "1050px", overflow: "hidden" }}
             scale={0.2}
           >
-            {screen === "off" && (
-              <OffScreen />
-            )}
-            {screen === "booting" && (
-              <BootScreen />
-            )}
-            {screen === "on" && (
-              <Desktop />
-            )}
-            {mode !== "focus" && (
-              <div
-                style={{
-                  position: "absolute",
-                  top: 0,
-                  left: 0,
-                  width: "100%",
-                  height: "100%",
-                  cursor: "pointer",
-                }}
-                onClick={() => setMode("focus")}
-              />
-            )}
+            <div
+              onPointerDown={(e) => e.stopPropagation()}
+              style={{ width: "100%", height: "100%", position: "relative", cursor: "auto" }}
+            >
+              {(screen === "intro" || screen === "off") && <OffScreen />}
+              {screen === "booting" && <BootScreen />}
+              {screen === "on" && <Desktop />}
+              {mode !== "focus" && (
+                <div
+                  style={{
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    width: "100%",
+                    height: "100%",
+                    cursor: "pointer",
+                  }}
+                  onClick={() => setMode("focus")}
+                />
+              )}
+            </div>
           </Html>
         </primitive>
       )}
