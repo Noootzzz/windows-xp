@@ -1,12 +1,10 @@
 import { useGLTF } from "@react-three/drei"
 import computerModel from "../../assets/models/Computer.glb"
-import { useExperienceStore } from "../../store/useExperienceStore"
 import { useMemo } from "react"
 import * as THREE from "three"
 
 export default function Computer() {
   const { scene } = useGLTF(computerModel)
-  const setMode = useExperienceStore((s) => s.setMode)
 
   const parts = useMemo(() => {
     const names = [

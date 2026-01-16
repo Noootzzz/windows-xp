@@ -1,7 +1,7 @@
 import React from "react";
 
 interface FileInputProps {
-  fileInputRef: React.RefObject<HTMLInputElement>;
+  fileInputRef: React.RefObject<HTMLInputElement | null>;
   onFileSelect: (e: React.ChangeEvent<HTMLInputElement>) => void;
   acceptTypes?: string;
 }

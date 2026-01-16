@@ -15,7 +15,7 @@ export type { Track };
  */
 export const useAudioPlayer = () => {
   const [currentTrackIndex, setCurrentTrackIndex] = useState<number>(-1);
-  const [volume, setVolume] = useState(PLAYER_CONFIG.DEFAULT_VOLUME);
+  const [volume, setVolume] = useState<number>(PLAYER_CONFIG.DEFAULT_VOLUME);
 
   const audioRef = useRef<HTMLAudioElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);

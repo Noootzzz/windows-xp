@@ -15,8 +15,8 @@ export interface AudioPlayerState {
   isPlaying: boolean;
   duration: number;
   currentTime: number;
-  audioRef: React.RefObject<HTMLAudioElement>;
-  fileInputRef: React.RefObject<HTMLInputElement>;
+  audioRef: React.RefObject<HTMLAudioElement | null>;
+  fileInputRef: React.RefObject<HTMLInputElement | null>;
   handleFileSelect: (e: React.ChangeEvent<HTMLInputElement>) => void;
   playTrack: (index: number) => void;
   togglePlay: () => void;
@@ -25,7 +25,7 @@ export interface AudioPlayerState {
   updateTime: () => void;
   updateDuration: () => void;
   volume: number;
-  setVolume: (volume: number) => void;
+  setVolume: React.Dispatch<React.SetStateAction<number>>;
 }
 
 export interface PlaylistTrack {
