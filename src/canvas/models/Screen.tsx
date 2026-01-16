@@ -1,20 +1,16 @@
 import { Html, useGLTF } from "@react-three/drei";
 import computerModel from "../../assets/models/Computer.glb";
-import {
-  useExperienceStore,
-  useScreenStore,
-} from "../../store/useExperienceStore";
+import { useExperienceStore, useScreenStore } from "../../core/store";
 import { useEffect, useRef, useMemo } from "react";
 import * as THREE from "three";
-import { WindowsXPDesktop } from "../../components/WindowsXPDesktop";
+import { Desktop } from "../../features/desktop/Desktop";
 import BootScreen from "../../components/BootScreen";
 import OffScreen from "../../components/OffScreen";
 
 export default function Screen() {
   const { scene } = useGLTF(computerModel);
-  const setMode = useExperienceStore((s) => s.setMode);
-  const mode = useExperienceStore((s) => s.mode);
-  const screen = useScreenStore((s) => s.screen);
+  const { mode, setMode } = useExperienceStore();
+  const { screen } = useScreenStore();
   const materialRef = useRef<THREE.MeshBasicMaterial | null>(null);
   const monitor003Ref = useRef<THREE.Object3D | null>(null);
   const monitor003 = useMemo(() => {
@@ -77,7 +73,7 @@ export default function Screen() {
               <BootScreen />
             )}
             {screen === "on" && (
-              <WindowsXPDesktop />
+              <Desktop />
             )}
             {mode !== "focus" && (
               <div

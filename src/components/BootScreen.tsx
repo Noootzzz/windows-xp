@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from "react";
-import { useScreenStore } from "../store/useExperienceStore";
+import { useScreenStore } from "../core/store";
 
 const BOOT_LINES = [
   { text: "Award Modular BIOS v6.00PG", delay: 30 },
@@ -33,9 +33,7 @@ export function BootScreen() {
   const [loadingProgress, setLoadingProgress] = useState(0);
   const [showLoading, setShowLoading] = useState(false);
   const [loadingText, setLoadingText] = useState("");
-  const setScreen = useScreenStore((s) => s.setScreen);
-
-  // Type boot lines one by one
+  const { setScreen } = useScreenStore();
   useEffect(() => {
     if (currentLineIndex >= BOOT_LINES.length) {
       setShowLoading(true);

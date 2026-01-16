@@ -1,5 +1,5 @@
 import { useThree, useFrame } from "@react-three/fiber";
-import { useExperienceStore } from "../store/useExperienceStore";
+import { useExperienceStore } from "../core/store";
 import * as THREE from "three";
 
 const idle = new THREE.Vector3(0, 2.5, 18);
@@ -10,7 +10,7 @@ const focusLookAt = new THREE.Vector3(0, 0, 2);
 
 export default function Camera() {
   const { camera } = useThree();
-  const mode = useExperienceStore((s) => s.mode);
+  const { mode } = useExperienceStore();
 
   useFrame(() => {
     let target = idle;

@@ -1,8 +1,8 @@
-import { useExperienceStore, useScreenStore } from "../store/useExperienceStore";
+import { useExperienceStore, useScreenStore } from "../core/store";
 
 export default function InteractionHint() {
-  const mode = useExperienceStore((s) => s.mode);
-  const screen = useScreenStore((s) => s.screen);
+  const { mode } = useExperienceStore();
+  const { screen } = useScreenStore();
 
   if (screen === "on" || screen === "booting") return null;
 

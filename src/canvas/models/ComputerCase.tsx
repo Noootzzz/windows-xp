@@ -1,18 +1,13 @@
 import { useGLTF } from "@react-three/drei";
 import computerModel from "../../assets/models/Computer.glb";
-import {
-  useExperienceStore,
-  useScreenStore,
-} from "../../store/useExperienceStore";
+import { useExperienceStore, useScreenStore } from "../../core/store";
 import { useMemo } from "react";
 import * as THREE from "three";
 
 export default function ComputerCase() {
   const { scene } = useGLTF(computerModel);
-  const setMode = useExperienceStore((s) => s.setMode);
-  const setScreen = useScreenStore((s) => s.setScreen);
-  const screenState = useScreenStore((s) => s.screen);
-  const startBoot = useScreenStore((s) => s.startBoot);
+  const { setMode } = useExperienceStore();
+  const { setScreen, screen: screenState, startBoot } = useScreenStore();
 
   const toggleScreen = (e: any) => {
     e.stopPropagation();

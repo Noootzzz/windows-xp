@@ -7,11 +7,11 @@ import Environment from "./Environment";
 import Screen from "./models/Screen";
 import ComputerCase from "./models/ComputerCase";
 import KeyBoard from "./models/KeyBoard";
-import { useExperienceStore } from "../store/useExperienceStore";
+import { useExperienceStore } from "../core/store";
 import Desk from "./models/Desk";
 
 export default function Experience() {
-  const mode = useExperienceStore((s) => s.mode);
+  const { mode } = useExperienceStore();
 
   return (
     <>
