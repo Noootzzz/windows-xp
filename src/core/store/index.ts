@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { useShallow } from 'zustand/react/shallow';
 import { createExperienceSlice, type ExperienceSlice } from './slices/experienceSlice';
 import { createScreenSlice, type ScreenSlice } from './slices/screenSlice';
 import { createWindowSlice, type WindowSlice } from './slices/windowSlice';
@@ -12,27 +13,33 @@ export const useStore = create<StoreState>()((...a) => ({
 }));
 
 export const useExperienceStore = () =>
-  useStore((state) => ({
-    mode: state.mode,
-    setMode: state.setMode,
-  }));
+  useStore(
+    useShallow((state) => ({
+      mode: state.mode,
+      setMode: state.setMode,
+    }))
+  );
 
 export const useScreenStore = () =>
-  useStore((state) => ({
-    screen: state.screen,
-    setScreen: state.setScreen,
-    startBoot: state.startBoot,
-  }));
+  useStore(
+    useShallow((state) => ({
+      screen: state.screen,
+      setScreen: state.setScreen,
+      startBoot: state.startBoot,
+    }))
+  );
 
 export const useWindowStore = () =>
-  useStore((state) => ({
-    windows: state.windows,
-    activeWindowId: state.activeWindowId,
-    openWindow: state.openWindow,
-    closeWindow: state.closeWindow,
-    minimizeWindow: state.minimizeWindow,
-    maximizeWindow: state.maximizeWindow,
-    restoreWindow: state.restoreWindow,
-    focusWindow: state.focusWindow,
-    toggleMinimize: state.toggleMinimize,
-  }));
+  useStore(
+    useShallow((state) => ({
+      windows: state.windows,
+      activeWindowId: state.activeWindowId,
+      openWindow: state.openWindow,
+      closeWindow: state.closeWindow,
+      minimizeWindow: state.minimizeWindow,
+      maximizeWindow: state.maximizeWindow,
+      restoreWindow: state.restoreWindow,
+      focusWindow: state.focusWindow,
+      toggleMinimize: state.toggleMinimize,
+    }))
+  );
