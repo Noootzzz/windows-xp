@@ -86,26 +86,41 @@ export function BootScreen() {
   }, []);
 
   return (
-    <div className="boot-screen">
-      <div className="boot-terminal">
-        {displayedLines.map((line, index) => (
-          <div key={index} className="boot-line">
-            {line}
-          </div>
-        ))}
-
-        {showLoading && (
-          <div className="boot-loading">
-            <div className="boot-line">{loadingText}</div>
-            <div className="boot-progress">
-              {generateProgressBar(loadingProgress)}
+    <div
+      className="w-[1200px] h-[1050px] bg-black overflow-hidden relative"
+      style={{ fontFamily: '"Perfect DOS VGA 437", "Courier New", monospace' }}
+    >
+      {/* Safe Area */}
+      <div className="absolute top-[55px] left-[55px] right-[55px] bottom-[55px]">
+        <div
+          className="text-[#aaaaaa] text-lg leading-[1.4] whitespace-pre-wrap"
+          style={{ textShadow: '0 0 5px rgba(170, 170, 170, 0.5)' }}
+        >
+          {displayedLines.map((line, index) => (
+            <div
+              key={index}
+              className="min-h-[1.4em] animate-[fadeIn_0.1s_ease-in]"
+            >
+              {line}
             </div>
-          </div>
-        )}
+          ))}
 
-        {!showLoading && (
-          <span className="boot-cursor">█</span>
-        )}
+          {showLoading && (
+            <div className="mt-5">
+              <div className="min-h-[1.4em]">{loadingText}</div>
+              <div
+                className="mt-2.5 text-[#ccff00] text-base tracking-normal"
+                style={{ textShadow: '0 0 8px rgba(204, 255, 0, 0.6)' }}
+              >
+                {generateProgressBar(loadingProgress)}
+              </div>
+            </div>
+          )}
+
+          {!showLoading && (
+            <span className="text-[#aaaaaa] animate-[blink_0.5s_step-end_infinite]">█</span>
+          )}
+        </div>
       </div>
     </div>
   );

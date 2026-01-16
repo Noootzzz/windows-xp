@@ -15,6 +15,7 @@ export default function CanvasRoot() {
       }}
       style={{ background: "transparent" }}
     >
+      
       <Experience />
     </Canvas>
   );

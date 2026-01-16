@@ -67,16 +67,16 @@ export const AlbumCoverGenerator: React.FC<AlbumCoverGeneratorProps> = ({
           </div>
 
           {/* Right Sidebar - Glassmorphism */}
-          <div className="w-80 harlem-glass p-7 flex flex-col gap-10 overflow-y-auto h-[550px] border-l border-white/5 scrollbar-hide">
+          <div className="w-80 bg-[rgba(26,26,26,0.7)] backdrop-blur-md p-7 flex flex-col gap-10 overflow-y-auto h-[550px] border-l border-white/5 scrollbar-hide">
             <div className="flex flex-col gap-4">
-              <SourceSelector 
-                activeImage={activeImage} 
-                onImageChange={setActiveImage} 
+              <SourceSelector
+                activeImage={activeImage}
+                onImageChange={setActiveImage}
               />
             </div>
-            
+
             <div className="flex flex-col gap-4">
-              <FilterSelector 
+              <FilterSelector
                 activeFilter={activeFilter}
                 onFilterChange={setActiveFilter}
                 activeColors={activeColors}
@@ -92,13 +92,13 @@ export const AlbumCoverGenerator: React.FC<AlbumCoverGeneratorProps> = ({
                   </label>
                   <span className="text-[11px] text-[#ccff00] font-bold">{intensity}%</span>
                 </div>
-                <input 
+                <input
                   type="range"
                   min="0"
                   max="100"
                   value={intensity}
                   onChange={(e) => setIntensity(parseInt(e.target.value))}
-                  className="harlem-slider"
+                  className="w-full h-1 bg-[#333] rounded-sm outline-none appearance-none [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:h-3 [&::-webkit-slider-thumb]:bg-[#ccff00] [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:shadow-[0_0_10px_rgba(204,255,0,0.5)] [&::-webkit-slider-thumb]:transition-transform [&::-webkit-slider-thumb]:hover:scale-110 [&::-moz-range-thumb]:w-3 [&::-moz-range-thumb]:h-3 [&::-moz-range-thumb]:bg-[#ccff00] [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:cursor-pointer [&::-moz-range-thumb]:border-none [&::-moz-range-thumb]:shadow-[0_0_10px_rgba(204,255,0,0.5)]"
                 />
               </div>
 
@@ -109,13 +109,13 @@ export const AlbumCoverGenerator: React.FC<AlbumCoverGeneratorProps> = ({
                   </label>
                   <span className="text-[11px] text-[#ccff00] font-bold">{grainIntensity}%</span>
                 </div>
-                <input 
+                <input
                   type="range"
                   min="0"
                   max="100"
                   value={grainIntensity}
                   onChange={(e) => setGrainIntensity(parseInt(e.target.value))}
-                  className="harlem-slider"
+                  className="w-full h-1 bg-[#333] rounded-sm outline-none appearance-none [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:h-3 [&::-webkit-slider-thumb]:bg-[#ccff00] [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:shadow-[0_0_10px_rgba(204,255,0,0.5)] [&::-webkit-slider-thumb]:transition-transform [&::-webkit-slider-thumb]:hover:scale-110 [&::-moz-range-thumb]:w-3 [&::-moz-range-thumb]:h-3 [&::-moz-range-thumb]:bg-[#ccff00] [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:cursor-pointer [&::-moz-range-thumb]:border-none [&::-moz-range-thumb]:shadow-[0_0_10px_rgba(204,255,0,0.5)]"
                 />
               </div>
 
@@ -126,13 +126,13 @@ export const AlbumCoverGenerator: React.FC<AlbumCoverGeneratorProps> = ({
                   </label>
                   <span className="text-[11px] text-[#ccff00] font-bold">{circularIntensity}%</span>
                 </div>
-                <input 
+                <input
                   type="range"
                   min="0"
                   max="100"
                   value={circularIntensity}
                   onChange={(e) => setCircularIntensity(parseInt(e.target.value))}
-                  className="harlem-slider"
+                  className="w-full h-1 bg-[#333] rounded-sm outline-none appearance-none [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:h-3 [&::-webkit-slider-thumb]:bg-[#ccff00] [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:shadow-[0_0_10px_rgba(204,255,0,0.5)] [&::-webkit-slider-thumb]:transition-transform [&::-webkit-slider-thumb]:hover:scale-110 [&::-moz-range-thumb]:w-3 [&::-moz-range-thumb]:h-3 [&::-moz-range-thumb]:bg-[#ccff00] [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:cursor-pointer [&::-moz-range-thumb]:border-none [&::-moz-range-thumb]:shadow-[0_0_10px_rgba(204,255,0,0.5)]"
                 />
               </div>
             </div>
@@ -147,7 +147,7 @@ export const AlbumCoverGenerator: React.FC<AlbumCoverGeneratorProps> = ({
               onRandomize={() => setCustomText("HARLEM")}
             />
           </div>
-          
+
           <ActionButtons
             onGenerate={randomizeAll}
             onDownload={downloadArt}

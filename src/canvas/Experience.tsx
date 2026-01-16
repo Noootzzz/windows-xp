@@ -32,6 +32,6 @@ export default function Experience() {
         <ComputerCase />
         <KeyBoard />
       </Suspense>
-      </>
+    </>
   );
 }
