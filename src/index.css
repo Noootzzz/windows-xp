@@ -295,3 +295,46 @@ body,
   animation: harlem-pulse 2s infinite;
 }
 
+.off-screen {
+  width: 1200px;
+  height: 1050px;
+  background-color: #0a0a0a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.cactus-jack-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+}
+
+.cactus-jack-img {
+  width: 300px;
+  height: auto;
+  filter: brightness(0) invert(1) drop-shadow(0 0 20px rgba(204, 255, 0, 0.3));
+  opacity: 0.9;
+}
+
+.off-screen-scanlines {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.15),
+    rgba(0, 0, 0, 0.15) 1px,
+    transparent 1px,
+    transparent 2px
+  );
+  pointer-events: none;
+  z-index: 2;
+}
+
